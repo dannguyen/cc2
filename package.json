@@ -1,0 +1,31 @@
+{
+  "name": "cc2",
+  "version": "0.0.1",
+  "description": "TK",
+  "keywords": [
+    "TK"
+  ],
+  "homepage": "https://github.com/alecglassford/cc2#readme",
+  "bugs": {
+    "url": "https://github.com/alecglassford/cc2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alecglassford/cc2.git"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Alec Glassford",
+    "email": "glassford@cs.stanford.edu",
+    "url": "https://alecglassford.com"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint"
+  },
+  "devDependencies": {
+    "eslint": "^4.16.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  }
+}
