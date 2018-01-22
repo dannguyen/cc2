@@ -4,10 +4,12 @@ import commonjs from 'rollup-plugin-commonjs';
 import buble from 'rollup-plugin-buble';
 import uglify from 'rollup-plugin-uglify';
 
+import pkg from './package.json';
+
 const production = !process.env.ROLLUP_WATCH;
 
 export default [
-  { // Rollup the Svelte frontend
+  { // Rollup the Svelte client
     input: 'client/main.js',
     output: {
       sourcemap: true,
@@ -30,8 +32,8 @@ export default [
       production && uglify(),
     ],
   },
-  { // Rollup the Express erver
-    input: 'server/main.js',
+  { // Rollup the Express server
+    input: './server/main.js',
     output: {
       sourcemap: true,
       format: 'cjs',
@@ -41,6 +43,6 @@ export default [
       resolve(),
       commonjs(),
     ],
-    external: id => id !== 'server/main.js',
+    external: id => id in pkg.dependencies,
   },
 ];

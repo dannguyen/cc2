@@ -1,7 +1,29 @@
 <h1>Hello {{name}}!</h1>
 
+{{#await projectList}}
+  <p>Waiting for project list...</p>
+{{then projects}}
+  <ul>
+    {{#each projects as project}}
+      <li>{{project.fields.name}}</li>
+    {{/each}}
+  </ul>
+{{catch err}}
+  <p>oops</p>
+{{/await}}
+
 <style>
   h1 {
     color: purple;
   }
 </style>
+
+<script>
+  export default {
+    data() {
+      return {
+        projectList: fetch('/api/projects').then(res => res.json()),
+      };
+    }
+  }
+</script>
