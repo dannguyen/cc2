@@ -1,6 +1,7 @@
 {
   "name": "cc2",
   "version": "0.0.1",
+  "private": true,
   "description": "TK",
   "keywords": [
     "TK"
@@ -19,18 +20,30 @@
     "email": "glassford@cs.stanford.edu",
     "url": "https://alecglassford.com"
   },
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "eslint"
+    "build": "rollup -c",
+    "dev": "nodemon -r dotenv/config server.js & rollup -c -w",
+    "start": "node server.js",
+    "test": "eslint server/ client/"
   },
   "dependencies": {
     "airtable": "^0.5.2",
+    "express": "^4.16.2",
     "twilio": "^3.11.0"
   },
   "devDependencies": {
     "dotenv": "^4.0.0",
     "eslint": "^4.16.0",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0"
+    "eslint-plugin-import": "^2.8.0",
+    "nodemon": "^1.14.11",
+    "rollup": "^0.54.1",
+    "rollup-plugin-buble": "^0.18.0",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.2",
+    "rollup-plugin-svelte": "^4.0.0",
+    "rollup-plugin-uglify": "^3.0.0",
+    "svelte": "^1.53.0"
   }
 }
