@@ -1,0 +1,29 @@
+<div>
+  {{#if currentProject === 'new'}}
+    <NewProject/>
+  {{elseif currentProject}}
+    <ProjectInfo :currentProject/>
+    <Submissions :currentProject/>
+  {{else}}
+    <h2>⬅️ Select a project or create a new one.</h2>
+  {{/if}}
+</div>
+
+<style>
+  div {
+    flex-grow: 1;
+    background-color: papayawhip;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
+<script>
+  import NewProject from './NewProject.html';
+  import ProjectInfo from './ProjectInfo.html';
+  import Submissions from './Submissions.html';
+
+  export default {
+    components: { NewProject, ProjectInfo, Submissions },
+  };
+</script>

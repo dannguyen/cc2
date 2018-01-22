@@ -1,0 +1,73 @@
+<div>
+  <h2>Your Projects</h2>
+  {{#await projectList}}
+    <p>Waiting for project list...</p>
+  {{then projects}}
+      {{#if projects.length === 0}}
+        <p>You don't have any projects yet.</p>
+      {{else}}
+        {{#each projects as project}}
+          <p class="{{currentProject === project.id ? 'selected' : ''}}"
+              on:click="set({ currentProject: project.id })">
+            {{project.fields.name}}
+          </p>
+        {{/each}}
+      {{/if}}
+      <p id="new-project"
+          class="{{currentProject === 'new' ? 'selected' : ''}}"
+          on:click="set({ currentProject: 'new' })">
+        ➕ Click here to create a new project.
+      </p>
+  {{catch err}}
+    <p>Error getting project names</p>
+  {{/await}}
+</div>
+
+<style>
+  div {
+    max-width: 500px;
+    background-color: cyan;
+  }
+
+  h2 {
+    text-align: center;
+    font-family: Palatino, Georgia;
+  }
+
+  p {
+    height: 2em;
+    margin: 0;
+    padding: 0.5em;
+    border-top: 1px solid grey;
+    text-align: center;
+    font-family: sans-serif;
+  }
+
+  p:hover {
+    font-weight: bolder;
+    background-color: steelblue;
+    cursor: pointer;
+  }
+
+  #new-project {
+    font-weight: bolder;
+  }
+
+  .selected {
+    background-color: pink;
+  }
+
+  .selected:hover {
+    background-color: deeppink;
+  }
+</style>
+
+<script>
+  export default {
+    data() {
+      return {
+        projectList: fetch('/api/projects').then(res => res.json()),
+      };
+    },
+  };
+</script>
