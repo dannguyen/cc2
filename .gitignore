@@ -1,5 +1,6 @@
 server.js*
 public/bundle.*
+.DS_Store
 
 # Logs
 logs
