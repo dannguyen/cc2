@@ -28,7 +28,7 @@ export default [
       }),
       resolve(),
       commonjs(),
-      production && buble({ exclude: 'node_modules/**' }),
+      // production && buble({ exclude: 'node_modules/**' }), TK Buble doesn't handle async/await
       production && uglify(),
     ],
   },
@@ -43,6 +43,6 @@ export default [
       resolve(),
       commonjs(),
     ],
-    external: id => id in pkg.dependencies,
+    external: id => id in pkg.dependencies || id === 'crypto',
   },
 ];

@@ -1,1 +1,59 @@
-Here's where you create a new project !!! TK
+<h2>Create a new project</h2>
+<h3>What do you want to call your project?</h3>
+<input type="text" bind:value="name">
+<h3>Upload your prompts here</h3>
+<input id="prompts" type="file" accept="audio/*" multiple
+    on:change="updateFiles(this.files)">
+<button on:click="createProject()">Make the thing!!!</button>
+
+{{#if projectId}}
+  <p>woohoo {{projectId}}</p>
+{{/if}}
+
+# prompts upload: {{ promptCount }}
+
+<script>
+  export default {
+    methods: {
+      updateFiles(newFiles) {
+        this.set({ files: newFiles });
+      },
+      async createProject() {
+        const project = await fetch('/api/projects', {
+          method: 'POST',
+          body: JSON.stringify({ name: this.get('name') }),
+          headers: new Headers({ 'Content-Type': 'application/json' }),
+        }).then(res => res.json());
+        const projectId = project.id;
+        this.set({ projectId });
+
+        const files = this.get('files');
+        const promptPromises = [];
+        const increment = () => {
+          this.set({ count: this.get('count') + 1 });
+        };
+        for (let index = 0; index < files.length; index += 1) {
+          const fd = new FormData();
+          fd.append('projectId', projectId);
+          fd.append('index', index);
+          fd.append('promptAudio', files[index]);
+          const prompt = fetch('/api/prompts', {
+            method: 'POST',
+            body: fd,
+          }).then(increment);
+          promptPromises.push(prompt);
+        }
+        await Promise.all(promptPromises);
+        console.log('🎉');
+      },
+    },
+    data() {
+      return {
+        name: 'put-name-here',
+        files: null,
+        projectId: null,
+        promptCount: 0,
+      };
+    },
+  };
+</script>
