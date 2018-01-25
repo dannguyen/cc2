@@ -29,7 +29,7 @@ const tempServe = async function tempServeFunc(app, file) {
 // audio blob is available in req.file.buffer
 // and we have req.body.projectId, req.body.index
 export default async function newPrompt(req, res) {
-  const hostname = process.env.NOW_URL || req.hostname;
+  const hostname = process.env.NOW_URL || `${req.protocol}://${req.hostname}`;
   const { index, projectId } = req.body;
   const tempUrl = await tempServe(this, req.file);
   try {

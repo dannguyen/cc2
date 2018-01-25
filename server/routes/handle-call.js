@@ -52,7 +52,7 @@ const saveRecording = async function saveRecordingFunc(caller, audio, projectId,
   }
 };
 
-const buildVoiceResponse = async function buildVoiceResponseFunc(hostname, projectId, index) {
+const buildVoiceResponse = async function buildVoiceResponseFunc(projectId, index) {
   const vr = new VoiceResponse();
   const prompt = await getPrompt(projectId, index);
   if (!prompt) {
@@ -62,7 +62,7 @@ const buildVoiceResponse = async function buildVoiceResponseFunc(hostname, proje
     const audioUrl = prompt.fields.audio[0].url;
     vr.play(audioUrl);
     vr.record({
-      action: `${hostname}/api/call/${index + 1}`,
+      action: `/api/call/${index + 1}`,
       method: 'POST',
       timeout: 10,
       finishOnKey: '#',
@@ -75,7 +75,6 @@ const buildVoiceResponse = async function buildVoiceResponseFunc(hostname, proje
 };
 
 export default async function handleCall(req, res) {
-  const hostname = process.env.NOW_URL || req.hostname;
   const index = +req.params.index;
   const { To, From, RecordingUrl } = req.body; // More here, e.g. geo, recording duration TK
   const project = await getProjectFromPhone(To);
@@ -86,6 +85,6 @@ export default async function handleCall(req, res) {
 
   if (RecordingUrl) saveRecording(From, RecordingUrl, project.id, index - 1);
 
-  const vrString = await buildVoiceResponse(hostname, project.id, index);
+  const vrString = await buildVoiceResponse(project.id, index);
   res.send(vrString);
 }

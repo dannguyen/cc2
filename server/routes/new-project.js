@@ -6,7 +6,7 @@ const newPhoneNumber = async function newPhoneNumberFunc(name, hostname) {
   const { phoneNumber } = await twilioClient.incomingPhoneNumbers.create({
     friendlyName: name,
     areaCode: '415',
-    voiceUrl: `${hostname}/api/receive-call`,
+    voiceUrl: `${hostname}/api/call/0`,
     voiceMethod: 'POST',
     voiceCallerIdLookup: false, // For now to save 1 cent per call (TK)
     apiVersion: '2010-04-01',
@@ -16,7 +16,7 @@ const newPhoneNumber = async function newPhoneNumberFunc(name, hostname) {
 
 export default async function newProject(req, res) {
   // error handling TK
-  const hostname = process.env.NOW_URL || req.hostname;
+  const hostname = process.env.NOW_URL || `${req.protocol}://${req.hostname}`;
   const { name } = req.body;
   const phone = '777'; // await newPhoneNumber(name, hostname);
   try {
