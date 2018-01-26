@@ -8,7 +8,11 @@ import handleCall from './routes/handle-call';
 import tempServe from './routes/temp-serve';
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: '/tmp/cc-tmp-storage',
+  }),
+});
 
 app.use(express.static('public'));
 app.get('/api/projects', getProjectNames);

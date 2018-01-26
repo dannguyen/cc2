@@ -43,6 +43,6 @@ export default [
       resolve(),
       commonjs(),
     ],
-    external: id => id in pkg.dependencies || id === 'crypto',
+    external: id => id in pkg.dependencies || id === 'fs',
   },
 ];
