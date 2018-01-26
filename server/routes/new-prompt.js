@@ -1,7 +1,5 @@
 import crypto from 'crypto';
 
-import removeRoute from 'express-remove-route';
-
 import db from '../db';
 
 const randomishString = function randomishStringFunc() {
@@ -16,13 +14,10 @@ const randomishString = function randomishStringFunc() {
   });
 };
 
-const tempServe = async function tempServeFunc(app, file) {
-  const tempUrl = await randomishString();
-  app.get(`/temp/${tempUrl}`, (req, res) => {
-    res.set('Content-Type', file.mimetype);
-    res.send(file.buffer);
-  });
-  return tempUrl;
+const tempStore = async function tempStoreFunc(file) {
+  const token = await randomishString();
+  global.temp[token] = file;
+  return token;
 };
 
 // express `app` is bound as `this`
@@ -31,14 +26,13 @@ const tempServe = async function tempServeFunc(app, file) {
 export default async function newPrompt(req, res) {
   const hostname = process.env.NOW_URL || `${req.protocol}://${req.hostname}`;
   const { index, projectId } = req.body;
-  const tempUrl = await tempServe(this, req.file);
+  const tempToken = await tempStore(req.file);
   try {
     const newPromptRecord = await db('prompts').create({
       index: +index,
       project: [projectId],
-      audio: [{ url: `${hostname}/temp/${tempUrl}` }],
+      audio: [{ url: `${hostname}/api/temp?token=${tempToken}` }],
     });
-    removeRoute(this, `/temp/${tempUrl}`); // garbage cleans? TK check - doesn't seem to work...
     res.send(newPromptRecord);
   } catch (err) {
     res.sendStatus(500);
