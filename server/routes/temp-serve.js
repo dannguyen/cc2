@@ -11,9 +11,12 @@ export default function tempServe(req, res) {
       return;
     }
     fs.unlink(filepath, (err2) => {
-      console.error(`Error unlinking file at ${filepath}`);
-      console.error(err2);
-      console.error('😞');
+      if (err2) {
+        console.error(`Error unlinking file at ${filepath}`);
+        console.error(err2);
+        console.error('😞');
+      }
+      console.log(`Sent and unlinked file from ${filepath}`);
     });
   });
 }
