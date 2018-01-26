@@ -1,0 +1,15 @@
+<input type="file" accept="audio/*"
+    on:change="updatePrompt(this.files)">
+
+<script>
+  export default {
+    methods: {
+      updatePrompt(newFiles) {
+        this.set({ file: newFiles[0] });
+      },
+    },
+    data() {
+      return { file: null };
+    },
+  };
+</script>

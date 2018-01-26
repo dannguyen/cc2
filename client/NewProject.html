@@ -2,23 +2,59 @@
 <h3>What do you want to call your project?</h3>
 <input type="text" bind:value="name">
 <h3>Upload your prompts here</h3>
-<input id="prompts" type="file" accept="audio/*" multiple
-    on:change="updateFiles(this.files)">
+{{#each files as file}}
+  <UploadPrompt bind:file/>
+{{/each}}
+<button on:click="oneMorePrompt()">➕ Add another prompt</button>
 <button on:click="createProject()">Make the thing!!!</button>
 
-{{#if projectId}}
-  <p>woohoo {{projectId}}</p>
+{{#if promptIds}}
+  {{#if !projectId}}
+    <p>Creating project record … <span class="loading"></span></p>
+  {{else}}
+    <p>Project {{name}} saved as {{projectId}} ✅</p>
+    {{#each promptIds as promptId, index}}
+      {{#if !promptId}}
+        <p>Uploading prompt {{index}} … <span class="loading"></span></p>
+      {{else}}
+        <p>Prompt {{index}} saved as {{promptId}}. ✅</p>
+      {{/if}}
+    {{/each}}
+  {{/if}}
 {{/if}}
 
-# prompts upload: {{ promptCount }}
+<style>
+  .loading {
+		display: inline-block;
+    margin-left: 1em;
+    border: 2px solid #ddd;
+    border-top: 2px solid blue;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
 
 <script>
+  import UploadPrompt from './UploadPrompt.html';
+
   export default {
+    components: { UploadPrompt },
     methods: {
-      updateFiles(newFiles) {
-        this.set({ files: newFiles });
+      oneMorePrompt() {
+        const files = this.get('files');
+        files.push(null);
+        this.set({ files });
       },
       async createProject() {
+        const files = this.get('files');
+        this.set({ promptIds: files.map(() => null) });
+
         const project = await fetch('/api/projects', {
           method: 'POST',
           body: JSON.stringify({ name: this.get('name') }),
@@ -27,32 +63,28 @@
         const projectId = project.id;
         this.set({ projectId });
 
-        const files = this.get('files');
-        const promptPromises = [];
-        const increment = () => {
-          this.set({ count: this.get('count') + 1 });
-        };
         for (let index = 0; index < files.length; index += 1) {
           const fd = new FormData();
           fd.append('projectId', projectId);
           fd.append('index', index);
           fd.append('promptAudio', files[index]);
-          const prompt = fetch('/api/prompts', {
+          fetch('/api/prompts', {
             method: 'POST',
             body: fd,
-          }).then(increment);
-          promptPromises.push(prompt);
+          }).then(res => res.json()).then((prompt) => {
+            const promptIds = this.get('promptIds');
+            promptIds[index] = prompt.id;
+            this.set({ promptIds });
+          });
         }
-        await Promise.all(promptPromises);
-        console.log('🎉');
       },
     },
     data() {
       return {
         name: 'put-name-here',
-        files: null,
+        files: [null],
         projectId: null,
-        promptCount: 0,
+        promptIds: null,
       };
     },
   };
