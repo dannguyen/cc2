@@ -1,7 +1,6 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import buble from 'rollup-plugin-buble';
 import uglify from 'rollup-plugin-uglify';
 
 import pkg from './package.json';
@@ -28,7 +27,6 @@ export default [
       }),
       resolve(),
       commonjs(),
-      // production && buble({ exclude: 'node_modules/**' }), TK Buble doesn't handle async/await
       production && uglify(),
     ],
   },
