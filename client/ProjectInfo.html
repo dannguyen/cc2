@@ -1,1 +1,38 @@
-<p>Project Info for {{currentProject}} will go here TK</p>
+<div>
+  <h2>{{name}}</h2>
+  <h3>{{currentProject.fields.phone}}</h3>
+  {{#if promptsPromise}}
+    {{#await promptsPromise}}
+      Loading prompts.
+    {{then prompts}}
+      {{#each prompts as prompt}}
+        <audio controls src="{{audioUrl(prompt)}}"></audio>
+      {{/each}}
+    {{catch err}}
+      <p>Error loading promts.</p>
+    {{/await}}
+  {{/if}}
+</div>
+
+<script>
+  export default {
+    computed: {
+      name: currentProject => currentProject.fields.name,
+    },
+    helpers: {
+      audioUrl: prompt => prompt.fields.audio[0].url,
+    },
+    oncreate() {
+      const promptsPromise = fetch(`api/prompts/${encodeURIComponent(this.get('name'))}`)
+        .then(res => res.json());
+      console.log(promptsPromise);
+      this.set({ promptsPromise });
+    },
+    data() {
+      return {
+        currentProject: null,
+        promptsPromise: null,
+      };
+    },
+  };
+</script>

@@ -7,8 +7,8 @@
         <p>You don't have any projects yet.</p>
       {{else}}
         {{#each projects as project}}
-          <p class="{{currentProject === project.id ? 'selected' : ''}}"
-              on:click="set({ currentProject: project.id })">
+          <p class="{{currentProject && currentProject.id === project.id ? 'selected' : ''}}"
+              on:click="set({ currentProject: project })">
             {{project.fields.name}}
           </p>
         {{/each}}

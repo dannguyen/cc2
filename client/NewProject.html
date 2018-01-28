@@ -1,27 +1,29 @@
-<h2>Create a new project</h2>
-<h3>What do you want to call your project?</h3>
-<input type="text" bind:value="name">
-<h3>Upload your prompts here</h3>
-{{#each files as file}}
-  <UploadPrompt bind:file/>
-{{/each}}
-<button on:click="oneMorePrompt()">➕ Add another prompt</button>
-<button on:click="createProject()">Make the thing!!!</button>
+<div>
+  <h2>Create a new project</h2>
+  <h3>What do you want to call your project?</h3>
+  <input type="text" bind:value="name">
+  <h3>Upload your prompts here</h3>
+  {{#each files as file}}
+    <UploadPrompt bind:file/>
+  {{/each}}
+  <button on:click="oneMorePrompt()">➕ Add another prompt</button>
+  <button on:click="createProject()">Make the thing!!!</button>
 
-{{#if promptIds}}
-  {{#if !projectId}}
-    <p>Creating project record … <span class="loading"></span></p>
-  {{else}}
-    <p>Project {{name}} saved as {{projectId}} ✅</p>
-    {{#each promptIds as promptId, index}}
-      {{#if !promptId}}
-        <p>Uploading prompt {{index}} … <span class="loading"></span></p>
-      {{else}}
-        <p>Prompt {{index}} saved as {{promptId}}. ✅</p>
-      {{/if}}
-    {{/each}}
+  {{#if promptIds}}
+    {{#if !projectId}}
+      <p>Creating project record … <span class="loading"></span></p>
+    {{else}}
+      <p>Project {{name}} saved as {{projectId}} ✅</p>
+      {{#each promptIds as promptId, index}}
+        {{#if !promptId}}
+          <p>Uploading prompt {{index}} … <span class="loading"></span></p>
+        {{else}}
+          <p>Prompt {{index}} saved as {{promptId}}. ✅</p>
+        {{/if}}
+      {{/each}}
+    {{/if}}
   {{/if}}
-{{/if}}
+</div>
 
 <style>
   .loading {
