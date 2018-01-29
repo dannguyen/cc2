@@ -1,18 +1,37 @@
-<div>
+<div id="project-info">
   <h2>{{name}}</h2>
   <h3>{{currentProject.fields.phone}}</h3>
-  {{#if promptsPromise}}
-    {{#await promptsPromise}}
-      Loading prompts.
-    {{then prompts}}
-      {{#each prompts as prompt}}
-        <audio controls src="{{audioUrl(prompt)}}"></audio>
+  {{#if !currentPrompts}}
+    Loading prompts.
+  {{else}}
+    <div id="prompts-container">
+      {{#each currentPrompts as prompt}}
+        <div>
+          <h4>Prompt {{prompt.fields.index}}</h4>
+          <audio controls src="{{audioUrl(prompt)}}"></audio>
+        </div>
       {{/each}}
-    {{catch err}}
-      <p>Error loading promts.</p>
-    {{/await}}
+    </div>
+  {{/if}}
+  {{#if currentSubmissions}}
+    <p>This project has received {{currentSubmissions.length}} submissions.</p>
   {{/if}}
 </div>
+
+<style>
+  #project-info {
+    border: 1px dotted grey;
+  }
+
+  #prompts-container {
+    display: flex;
+    flex-direction:row;
+  }
+
+  #prompts-container div {
+    margin: 1em;
+  }
+</style>
 
 <script>
   export default {
@@ -22,16 +41,11 @@
     helpers: {
       audioUrl: prompt => prompt.fields.audio[0].url,
     },
-    oncreate() {
-      const promptsPromise = fetch(`api/prompts/${encodeURIComponent(this.get('name'))}`)
-        .then(res => res.json());
-      console.log(promptsPromise);
-      this.set({ promptsPromise });
-    },
     data() {
       return {
         currentProject: null,
-        promptsPromise: null,
+        currentPrompts: null,
+        currentSubmissions: null,
       };
     },
   };

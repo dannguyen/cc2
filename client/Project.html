@@ -2,8 +2,8 @@
   {{#if currentProject === 'new'}}
     <NewProject/>
   {{elseif currentProject}}
-    <ProjectInfo :currentProject/>
-    <Submissions :currentProject/>
+    <ProjectInfo :currentProject :currentPrompts :currentSubmissions/>
+    <Submissions :currentProject :currentPrompts :currentSubmissions/>
   {{else}}
     <h2>⬅️ Select a project or create a new one.</h2>
   {{/if}}
@@ -25,5 +25,42 @@
 
   export default {
     components: { NewProject, ProjectInfo, Submissions },
+    data() {
+      return {
+        currentProject: null,
+        currentPrompts: null,
+        currentSubmissions: null,
+      };
+    },
+    computed: {
+      uriName: (currentProject) => {
+        if (!currentProject) return null;
+        return encodeURIComponent(currentProject.fields.name);
+      },
+    },
+    oncreate() {
+      const fetchPrompts = () => {
+        this.set({ currentPrompts: null });
+        const name = this.get('uriName');
+        fetch(`api/prompts/${name}`).then(res => res.json())
+          .then((currentPrompts) => {
+            this.set({ currentPrompts });
+          });
+      };
+      const fetchSubmissions = () => {
+        this.set({ currentSubmissions: null });
+        const name = this.get('uriName');
+        fetch(`api/submissions/${name}`).then(res => res.json())
+          .then((currentSubmissions) => {
+            this.set({ currentSubmissions });
+          });
+      };
+      fetchPrompts();
+      fetchSubmissions();
+      this.observe('currentProject', () => {
+        fetchPrompts();
+        fetchSubmissions();
+      });
+    },
   };
 </script>

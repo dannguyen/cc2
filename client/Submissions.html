@@ -1,1 +1,48 @@
-<p>Submissions for {{currentProject}} will go here TK</p>
+<div>
+  {{#if !currentSubmissions || !currentPrompts}}
+    Loading submissions.
+  {{else}}
+    {{#each currentPrompts as prompt}}
+      <h3>Submissions for prompt {{prompt.fields.index}}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Caller</th>
+            <th>Audio</th>
+            <th>Transcript</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each filterByPrompt(currentSubmissions, prompt.id) as submission}}
+            <tr>
+              <td>{{submission.fields.timestamp}}</td>
+              <td>{{submission.fields.caller}}</td>
+              <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td>
+              <td>TK</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/each}}
+  {{/if}}
+</div>
+
+<script>
+  export default {
+    data() {
+      return {
+        currentProject: null,
+        currentPrompts: null,
+        currentSubmissions: null,
+      };
+    },
+    computed: {
+      projectName: currentProject => currentProject.fields.name,
+    },
+    helpers: {
+      filterByPrompt: (currentSubmissions, promptId) =>
+        currentSubmissions.filter(sub => sub.fields.prompt[0] === promptId),
+    },
+  };
+</script>
