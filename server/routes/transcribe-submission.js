@@ -3,40 +3,28 @@ import speech from '@google-cloud/speech';
 
 import db from '../db';
 
-if (process.env.GCLOUD_PROJECT_ID === undefined) {
-  throw new Error('Missing environment variable: GCLOUD_PROJECT_ID');
-}
-if (process.env.GCLOUD_API_KEY === undefined) {
-  throw new Error('Missing environment variable: GCLOUD_API_KEY');
-}
-const sc = new speech.v1.SpeechClient({
-  // projectId: process.env.GCLOUD_PROJECT_ID,
-  // key: process.env.GCLOUD_API_KEY,
-});
-console.log('gonna get the proj id');
-sc.getProjectId((err, str) => {
-  console.log('sc proj id');
-  console.log(err);
-  console.log(str);
-});
+const sc = new speech.v1.SpeechClient();
 
-const saveTranscription = async function saveTranscriptionFunc(prelim) {
+const saveTranscription = async function saveTranscriptionFunc(prelim, submissionId) {
+  await db('submissions').update(submissionId, { transcript: 'Transcription in progress.' });
+  console.log('updated db with a prelim');
   const final = await prelim[0].promise();
-  console.log('got final');
-  const transcription = final[0].results
+  const transcript = final[0].results
     .map(result => result.alternatives[0].transcript)
     .join('\n');
-  console.log(`Transcription: ${transcription}`);
+  console.log('transcript');
+  console.log(transcript);
+  await db('submissions').update(submissionId, { transcript });
+  console.log('updated db with a final');
 };
 
 export default async function transcribeSubmission(req, res) {
   const { submissionId } = req.params;
+  console.log(submissionId);
   try {
     const submission = await db('submissions').find(submissionId);
-    console.log(submission.fields.audio);
     const audioBinary = await fetch(submission.fields.audio)
       .then(audioRes => audioRes.buffer());
-    console.log('downloaded audio');
     const prelimResult = await sc.longRunningRecognize({
       config: {
         encoding: 'LINEAR16',
@@ -50,12 +38,9 @@ export default async function transcribeSubmission(req, res) {
         content: audioBinary.toString('base64'),
       },
     });
-    console.log('started speech recognition:');
-    console.log(prelimResult);
-    saveTranscription(prelimResult);
+    saveTranscription(prelimResult, submissionId);
     res.sendStatus(200);
-  } catch (err) {
-    console.log('boo');
+  } catch (err) { // TK improve error handling
     console.error(err);
     res.sendStatus(500);
   }

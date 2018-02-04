@@ -19,7 +19,13 @@
               <td>{{submission.fields.timestamp}}</td>
               <td>{{submission.fields.caller}}</td>
               <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td>
-              <td>TK</td>
+              <td>
+                {{#if submission.fields.transcript}}
+                  {{submission.fields.transcript}}
+                {{else}}
+                  <button on:click="transcribe(submission.id)">Transcribe</button>
+                {{/if}}
+              </td>
             </tr>
           {{/each}}
         </tbody>
@@ -43,6 +49,24 @@
     helpers: {
       filterByPrompt: (currentSubmissions, promptId) =>
         currentSubmissions.filter(sub => sub.fields.prompt[0] === promptId),
+    },
+    methods: {
+      async transcribe(submissionId) {
+        console.log(submissionId);
+        await fetch(`/api/transcribe/${submissionId}`, {
+          method: 'POST',
+        });
+        console.log('fetched');
+        const submissions = this.get('currentSubmissions');
+        for (let i = 0; i < submissions.length; i += 1) {
+          if (submissions[i].id === submissionId) {
+            submissions[i].transcript = 'Transcription in progress.';
+            console.log(submissions);
+            this.set({ currentSubmissions: submissions });
+            return;
+          }
+        }
+      },
     },
   };
 </script>
