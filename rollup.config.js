@@ -41,6 +41,6 @@ export default [
       resolve(),
       commonjs(),
     ],
-    external: id => id in pkg.dependencies || id === 'fs',
+    external: id => id in pkg.dependencies || id === 'fs' || id === 'path',
   },
 ];
