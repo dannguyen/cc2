@@ -12,7 +12,7 @@ import tempServe from './routes/temp-serve';
 const app = express();
 const upload = multer({
   storage: multer.diskStorage({
-    destination: '/tmp/cc-tmp-storage',
+    destination: '/tmp/cc-tmp-storage', // TK make more flexible?
   }),
 });
 

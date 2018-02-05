@@ -10,7 +10,6 @@
             <th>Timestamp</th>
             <th>Caller</th>
             <th>Audio</th>
-            <th>Transcript</th>
           </tr>
         </thead>
         <tbody>
@@ -18,13 +17,15 @@
             <tr>
               <td>{{submission.fields.timestamp}}</td>
               <td>{{submission.fields.caller}}</td>
-              <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td>
-              <td>
-                {{#if submission.fields.transcript}}
-                  {{submission.fields.transcript}}
-                {{else}}
-                  <button on:click="transcribe(submission.id)">Transcribe</button>
-                {{/if}}
+              <!-- <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td> -->
+              <td class="audio">
+                <span class="soundcite" data-url="{{submission.fields.audio}}" data-plays="1">
+                  {{#if submission.fields.transcript}}
+                    {{submission.fields.transcript}}
+                  {{else}}
+                    No transcript available.
+                  {{/if}}
+                </span>
               </td>
             </tr>
           {{/each}}
@@ -34,8 +35,32 @@
   {{/if}}
 </div>
 
+<style>
+  .audio {
+    max-width: 25em;
+  }
+
+  .soundcite {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .soundcite:hover {
+    white-space: normal;
+  }
+</style>
+
 <script>
+  import initSoundcite from './soundcite';
+
   export default {
+    oncreate() {
+      this.observe('currentSubmissions', () => {
+        initSoundcite();
+      }, { defer: true });
+    },
     data() {
       return {
         currentProject: null,
