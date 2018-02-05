@@ -1,6 +1,5 @@
 <div id="wrapper">
-  <h1>Call Collect 2</h1>
-  <h2>The current project is {{currentProject}}</h2>
+  <h1>Call Collect</h1>
   <div id="main">
     <ProjectNav bind:currentProject />
     <Project :currentProject/>
@@ -8,19 +7,26 @@
 </div>
 
 <style>
+  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+  @import url('https://fonts.googleapis.com/css?family=Source+Serif+Pro');
+
   #wrapper {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin: 0;
     min-height: 100vh;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 1.2em;
   }
 
   h1 {
-    color: purple;
+    margin: 1em;
+    font-size: 1em;
+    font-family: "Source Serif Pro", serif;
   }
 
   #main {
-    margin: 1em;
     flex-grow: 1;
     display: flex;
     flex-direction: row;

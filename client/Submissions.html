@@ -10,13 +10,14 @@
             <th>Timestamp</th>
             <th>Caller</th>
             <th>Audio</th>
+            <th>Download</th>
           </tr>
         </thead>
         <tbody>
           {{#each filterByPrompt(currentSubmissions, prompt.id) as submission}}
             <tr>
-              <td>{{submission.fields.timestamp}}</td>
-              <td>{{submission.fields.caller}}</td>
+              <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
+              <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
               <!-- <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td> -->
               <td class="audio">
                 <span class="soundcite" data-url="{{submission.fields.audio}}" data-plays="1">
@@ -27,6 +28,7 @@
                   {{/if}}
                 </span>
               </td>
+              <td class="download"><a href="{{submission.fields.audio}}.wav?Download=true">⬇️</a></td>
             </tr>
           {{/each}}
         </tbody>
@@ -36,11 +38,43 @@
 </div>
 
 <style>
+  table {
+    margin: 1em 0;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  td {
+    border: 1px solid grey;
+    padding: 0.5em;
+  }
+
+  td:first-child {
+    border-left: 0;
+  }
+
+  td:last-child {
+    border-right: 0;
+  }
+
+  .timestamp {
+    min-width: 8em;
+  }
+
+  .caller {
+    min-width: 6em;
+  }
+
   .audio {
-    max-width: 25em;
+    max-width: 20em;
+  }
+
+  .download a {
+    text-decoration: none;
   }
 
   .soundcite {
+    display: inline-block;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -54,6 +88,7 @@
 
 <script>
   import initSoundcite from './soundcite';
+  import { humanPhone } from './util';
 
   export default {
     oncreate() {
@@ -74,6 +109,7 @@
     helpers: {
       filterByPrompt: (currentSubmissions, promptId) =>
         currentSubmissions.filter(sub => sub.fields.prompt[0] === promptId),
+      humanPhone,
     },
   };
 </script>

@@ -1,6 +1,6 @@
 <div id="project-info">
   <h2>{{name}}</h2>
-  <h3>{{currentProject.fields.phone}}</h3>
+  <h3>{{humanPhone(currentProject.fields.phone)}}</h3>
   {{#if !currentPrompts}}
     Loading prompts.
   {{else}}
@@ -20,26 +20,50 @@
 
 <style>
   #project-info {
-    border: 1px dotted grey;
+    margin: 0 auto;
+    max-width: 20em;
+    text-align: center;
   }
 
-  #prompts-container {
-    display: flex;
-    flex-direction:row;
+  h2 {
+    margin-bottom: 0;
+    font-size: 2em;
+    font-family: "Source Serif Pro", Palatino, Georgia, serif;
+  }
+
+  h3 {
+    margin-top: 0.5em;
+    font-size: 1.5em;
   }
 
   #prompts-container div {
-    margin: 1em;
+    margin: 1em 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  h4 {
+    margin: 0 0.5em;
+    font-size: 1.2em;
+  }
+
+  audio {
+    max-width: 50%;
   }
 </style>
 
 <script>
+  import { humanPhone } from './util';
+
   export default {
     computed: {
       name: currentProject => currentProject.fields.name,
     },
     helpers: {
       audioUrl: prompt => prompt.fields.audio[0].url,
+      humanPhone,
     },
     data() {
       return {

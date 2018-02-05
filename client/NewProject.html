@@ -7,7 +7,7 @@
     <UploadPrompt bind:file/>
   {{/each}}
   <button on:click="oneMorePrompt()">➕ Add another prompt</button>
-  <button on:click="createProject()">Make the thing!!!</button>
+  <button id="create" on:click="createProject()">🚂 Create project</button>
 
   {{#if promptIds}}
     {{#if !projectId}}
@@ -26,6 +26,18 @@
 </div>
 
 <style>
+  div {
+    margin: 0 auto;
+    max-width: 30em;
+    display: flex;
+    flex-direction: column;
+  }
+
+  input[type="text"] {
+    font-size: 1.5em;
+    outline: none;
+  }
+
   .loading {
 		display: inline-block;
     margin-left: 1em;
@@ -39,6 +51,12 @@
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+  }
+
+  #create {
+    margin: 2em auto;
+    width: 50%;
+    height: 5em;
   }
 </style>
 
