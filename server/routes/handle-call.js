@@ -1,6 +1,7 @@
 import twilio from 'twilio';
 
 import db from '../db';
+import transcribe from '../transcribe-submission';
 
 const { VoiceResponse } = twilio.twiml;
 
@@ -45,6 +46,7 @@ const saveRecording = async function saveRecordingFunc(caller, audio, projectId,
     const submission = await db('submissions')
       .create({ audio, caller, prompt: [prompt.id] });
     console.log(`Saved a recording to ${submission.id}.`);
+    transcribe(submission.id);
   } catch (err) {
     console.error(`Failed to save recording with caller ${caller}, audio ${audio}, projectId ${projectId}, index ${index}:`);
     console.error(err);
