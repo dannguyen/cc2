@@ -44,7 +44,12 @@ const saveRecording = async function saveRecordingFunc(caller, audio, projectId,
 
   try {
     const submission = await db('submissions')
-      .create({ audio, caller, prompt: [prompt.id] });
+      .create({
+        audio,
+        caller,
+        project: [projectId],
+        prompt: [prompt.id],
+      });
     console.log(`Saved a recording to ${submission.id}.`);
     transcribe(submission.id);
   } catch (err) {
