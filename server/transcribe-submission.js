@@ -7,13 +7,14 @@ import db from './db';
 
 let transcribe;
 
-if (process.env.GOOGLE_APPLICATION_CREDENTIALS === undefined) {
-  console.log('No GOOGLE_APPLICATION_CREDENTIALS found, disabling transcription.');
+if (process.env.GOOGLE_CREDS_STRING === undefined) {
+  console.log('No GOOGLE_CREDS_STRING found, disabling transcription.');
   transcribe = function transcribeNoop() {
   };
 } else {
-  const sc = new speech.v1.SpeechClient();
-  const storage = new Storage();
+  const credentials = JSON.parse(process.env.GOOGLE_CREDS_STRING);
+  const sc = new speech.v1.SpeechClient({ credentials });
+  const storage = new Storage({ credentials });
   const bucket = storage.bucket('call-collect'); // Can't actually use this - need to add random hash TK
   let bucketExists = false; // Assume it doesn't until proven.
   const createBucket = async function createBucketFunc() {
