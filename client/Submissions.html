@@ -2,38 +2,75 @@
   {{#if !currentSubmissions || !currentPrompts}}
     Loading submissions.
   {{else}}
-    {{#each currentPrompts as prompt}}
-      <h3>Submissions for prompt {{prompt.fields.index}}</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Timestamp</th>
-            <th>Caller</th>
-            <th>Audio</th>
-            <th>Download</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each filterByPrompt(currentSubmissions, prompt.id) as submission}}
+    <label><input type="radio" bind:group="organize" value='prompt' checked>Group by prompt</label>
+    <label><input type="radio" bind:group="organize" value='caller'>Group by caller</label>
+    {{#if organize === 'prompt'}}
+      {{#each currentPrompts as prompt}}
+        <h3>Submissions for prompt {{prompt.fields.index}}</h3>
+        <table>
+          <thead>
             <tr>
-              <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
-              <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
-              <!-- <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td> -->
-              <td class="audio">
-                <span class="soundcite" data-url="{{submission.fields.audio}}" data-plays="1">
-                  {{#if submission.fields.transcript}}
-                    {{submission.fields.transcript}}
-                  {{else}}
-                    No transcript available.
-                  {{/if}}
-                </span>
-              </td>
-              <td class="download"><a href="{{submission.fields.audio}}.wav?Download=true">⬇️</a></td>
+              <th>Timestamp</th>
+              <th>Caller</th>
+              <th>Audio</th>
+              <th>Download</th>
             </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    {{/each}}
+          </thead>
+          <tbody>
+            {{#each filterByPrompt(currentSubmissions, prompt.id) as submission}}
+              <tr transition:fly='{y: 200, duration: 1000}'>
+                <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
+                <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
+                <!-- <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td> -->
+                <td class="audio">
+                  <span class="soundcite" data-url="{{submission.fields.audio}}" data-plays="1">
+                    {{#if submission.fields.transcript}}
+                      {{submission.fields.transcript}}
+                    {{else}}
+                      No transcript available.
+                    {{/if}}
+                  </span>
+                </td>
+                <td class="download"><a href="{{submission.fields.audio}}.wav?Download=true">⬇️</a></td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/each}}
+    {{else}}
+      {{#each callers as caller}}
+        <h3>Submissions from {{humanPhone(caller)}}</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Caller</th>
+              <th>Audio</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each filterByCaller(currentSubmissions, caller) as submission}}
+              <tr transition:fly='{y: 200, duration: 1000}'>
+                <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
+                <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
+                <!-- <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td> -->
+                <td class="audio">
+                  <span class="soundcite" data-url="{{submission.fields.audio}}" data-plays="1">
+                    {{#if submission.fields.transcript}}
+                      {{submission.fields.transcript}}
+                    {{else}}
+                      No transcript available.
+                    {{/if}}
+                  </span>
+                </td>
+                <td class="download"><a href="{{submission.fields.audio}}.wav?Download=true">⬇️</a></td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/each}}
+    {{/if}}
   {{/if}}
 </div>
 
@@ -87,6 +124,8 @@
 </style>
 
 <script>
+  import { fly } from 'svelte-transitions';
+
   import initSoundcite from './soundcite';
   import { humanPhone } from './util';
 
@@ -101,15 +140,23 @@
         currentProject: null,
         currentPrompts: null,
         currentSubmissions: null,
+        organize: 'prompt',
       };
     },
     computed: {
       projectName: currentProject => currentProject.fields.name,
+      callers: function callersFunc(currentSubmissions) {
+        if (!currentSubmissions) return null;
+        return Array.from(new Set(currentSubmissions.map(sub => sub.fields.caller)));
+      },
     },
     helpers: {
       filterByPrompt: (currentSubmissions, promptId) =>
         currentSubmissions.filter(sub => sub.fields.prompt[0] === promptId),
+      filterByCaller: (currentSubmissions, caller) =>
+        currentSubmissions.filter(sub => sub.fields.caller === caller),
       humanPhone,
     },
+    transitions: { fly },
   };
 </script>
