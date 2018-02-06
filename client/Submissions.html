@@ -4,9 +4,10 @@
   {{else}}
     <label><input type="radio" bind:group="organize" value='prompt' checked>Group by prompt</label>
     <label><input type="radio" bind:group="organize" value='caller'>Group by caller</label>
+    <label style="float: right">Search transcripts <input type="text" bind:value="search"></label>
     {{#if organize === 'prompt'}}
       {{#each currentPrompts as prompt}}
-        <h3>Submissions for prompt {{prompt.fields.index}}</h3>
+        <h3>Submissions for prompt {{humanIndex(prompt.fields.index)}}</h3>
         <table>
           <thead>
             <tr>
@@ -17,7 +18,7 @@
             </tr>
           </thead>
           <tbody>
-            {{#each filterByPrompt(currentSubmissions, prompt.id) as submission}}
+            {{#each filterByPrompt(searchedSubmissions, prompt.id) as submission}}
               <tr transition:fly='{y: 200, duration: 1000}'>
                 <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
                 <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
@@ -50,7 +51,7 @@
             </tr>
           </thead>
           <tbody>
-            {{#each filterByCaller(currentSubmissions, caller) as submission}}
+            {{#each filterByCaller(searchedSubmissions, caller) as submission}}
               <tr transition:fly='{y: 200, duration: 1000}'>
                 <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
                 <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
@@ -127,11 +128,14 @@
   import { fly } from 'svelte-transitions';
 
   import initSoundcite from './soundcite';
-  import { humanPhone } from './util';
+  import { humanIndex, humanPhone } from './util';
 
   export default {
     oncreate() {
       this.observe('currentSubmissions', () => {
+        initSoundcite();
+      }, { defer: true });
+      this.observe('organize', () => { // no this sucks TK fix
         initSoundcite();
       }, { defer: true });
     },
@@ -141,6 +145,7 @@
         currentPrompts: null,
         currentSubmissions: null,
         organize: 'prompt',
+        search: '',
       };
     },
     computed: {
@@ -149,12 +154,21 @@
         if (!currentSubmissions) return null;
         return Array.from(new Set(currentSubmissions.map(sub => sub.fields.caller)));
       },
+      searchedSubmissions: function searchFunc(search, currentSubmissions) {
+        if (!search.length) return currentSubmissions;
+        const lowerSearch = search.toLowerCase();
+        return currentSubmissions.filter((sub) => {
+          if (!sub.fields.transcript) return false;
+          return sub.fields.transcript.toLowerCase().includes(lowerSearch);
+        });
+      },
     },
     helpers: {
-      filterByPrompt: (currentSubmissions, promptId) =>
-        currentSubmissions.filter(sub => sub.fields.prompt[0] === promptId),
-      filterByCaller: (currentSubmissions, caller) =>
-        currentSubmissions.filter(sub => sub.fields.caller === caller),
+      filterByPrompt: (subs, promptId) =>
+        subs.filter(sub => sub.fields.prompt[0] === promptId),
+      filterByCaller: (subs, caller) =>
+        subs.filter(sub => sub.fields.caller === caller),
+      humanIndex,
       humanPhone,
     },
     transitions: { fly },
