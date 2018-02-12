@@ -7,7 +7,7 @@
     <label style="float: right">Search transcripts <input type="text" bind:value="search"></label>
     {{#if organize === 'prompt'}}
       {{#each currentPrompts as prompt}}
-        <h3>Submissions for prompt {{humanIndex(prompt.fields.index)}}</h3>
+        <h3>Submissions for {{prompt.fields.slug || `$prompt {humanIndex(prompt.fields.index)}`}}</h3>
         <table>
           <thead>
             <tr>
@@ -171,10 +171,8 @@
       humanIndex,
       humanPhone,
       promptIdToSlug: (id, currentPrompts) => {
-        console.log(currentPrompts);
-        console.log(id);
         const prompt = currentPrompts.find(p => p.id === id);
-        return humanIndex(prompt.fields.index);
+        return prompt.fields.slug || humanIndex(prompt.fields.index);
       },
     },
     transitions: { fly },
