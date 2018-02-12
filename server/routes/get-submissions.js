@@ -6,8 +6,8 @@ export default async function getSubmissions(req, res) {
     const submissions = await db('submissions').select({
       filterByFormula: `project='${projectName}'`,
       sort: [
-        { field: 'prompt', direction: 'asc' },
         { field: 'timestamp', direction: 'asc' },
+        { field: 'prompt', direction: 'asc' },
       ],
     }).all();
     res.json(submissions);

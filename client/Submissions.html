@@ -45,7 +45,7 @@
           <thead>
             <tr>
               <th>Timestamp</th>
-              <th>Caller</th>
+              <th>Prompt</th>
               <th>Audio</th>
               <th>Download</th>
             </tr>
@@ -54,7 +54,7 @@
             {{#each filterByCaller(searchedSubmissions, caller) as submission}}
               <tr transition:fly='{y: 200, duration: 1000}'>
                 <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
-                <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
+                <td class="caller">{{promptIdToSlug(submission.fields.prompt[0], currentPrompts)}}</td>
                 <!-- <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td> -->
                 <td class="audio">
                   <span class="soundcite" data-url="{{submission.fields.audio}}" data-plays="1">
@@ -170,6 +170,12 @@
         subs.filter(sub => sub.fields.caller === caller),
       humanIndex,
       humanPhone,
+      promptIdToSlug: (id, currentPrompts) => {
+        console.log(currentPrompts);
+        console.log(id);
+        const prompt = currentPrompts.find(p => p.id === id);
+        return humanIndex(prompt.fields.index);
+      },
     },
     transitions: { fly },
   };

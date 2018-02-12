@@ -16,7 +16,7 @@
       <p id="new-project"
           class="{{currentProject === 'new' ? 'selected' : ''}}"
           on:click="set({ currentProject: 'new' })">
-        ➕ Click here to create a new project.
+        ➕ New project
       </p>
   {{catch err}}
     <p>Error getting project names</p>
@@ -26,8 +26,9 @@
 <style>
   div {
     max-width: 15em;
-    background-color: cyan;
     padding: 1em 0;
+    background-color: #2E4053;
+    color: #F4F6F7;
   }
 
   h2 {
@@ -55,11 +56,11 @@
   }
 
   .selected {
-    background-color: pink;
+    background-color: #85929E;
   }
 
   .selected:hover {
-    background-color: deeppink;
+    background-color: #5499C7;
   }
 </style>
 
