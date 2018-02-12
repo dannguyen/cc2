@@ -1,0 +1,72 @@
+<tr transition:fly='{y: 200, duration: 1000}'>
+  <td class="timestamp">{{new Date(submission.fields.timestamp).toLocaleString()}}</td>
+  <td class="caller">{{humanPhone(submission.fields.caller)}}</td>
+  <!-- <td><audio controls preload="metadata" src="{{submission.fields.audio}}"></audio></td> -->
+  <td class="audio">
+    <span class="soundcite" data-url="{{submission.fields.audio}}" data-plays="1">
+      {{#if submission.fields.transcript}}
+        {{submission.fields.transcript}}
+      {{else}}
+        No transcript available.
+      {{/if}}
+    </span>
+  </td>
+  <td class="download"><a href="{{submission.fields.audio}}.wav?Download=true">⬇️</a></td>
+</tr>
+
+<style>
+  td {
+    border: 1px solid grey;
+    padding: 0.5em;
+  }
+
+  td:first-child {
+    border-left: 0;
+  }
+
+  td:last-child {
+    border-right: 0;
+  }
+
+  .timestamp {
+    min-width: 8em;
+  }
+
+  .caller {
+    min-width: 6em;
+  }
+
+  .audio {
+    max-width: 20em;
+  }
+
+  .download a {
+    text-decoration: none;
+  }
+
+  .soundcite {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .soundcite:hover {
+    white-space: normal;
+  }
+</style>
+
+<script>
+  import { fly } from 'svelte-transitions';
+
+  import { humanPhone } from './util';
+
+  export default {
+    data() {
+      return { submission: null };
+    },
+    helpers: { humanPhone },
+    transitions: { fly },
+  };
+</script>
