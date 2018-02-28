@@ -1,56 +1,54 @@
-(function () {
-'use strict';
-
 /* eslint-env browser */
 
-var deployFilesBase = 'https://raw.githubusercontent.com/alecglassford/cc2/master/';
+const deployFilesBase = 'https://raw.githubusercontent.com/alecglassford/cc2/master/';
 
-var getDeployFiles = function getDeployFilesFunc() {
+const getDeployFiles = function getDeployFilesFunc() {
   return fetch('deploy-files.json')
-    .then(function (res) { return res.json(); })
-    .then(function (filenames) {
-      var files = filenames.map(function (file) { return fetch(("" + deployFilesBase + file))
-          .then(function (res) { return res.text(); })
-          .then(function (data) { return ({ file: file, data: data }); }); });
+    .then(res => res.json())
+    .then((filenames) => {
+      const files = filenames.map(file =>
+        fetch(`${deployFilesBase}${file}`)
+          .then(res => res.text())
+          .then(data => ({ file, data })));
       return Promise.all(files);
     });
 };
 
-var deploy = function deployFunc(env) {
+const deploy = function deployFunc(env) {
   getDeployFiles()
-    .then(function (files) {
-      var postBody = {
-        env: env,
+    .then((files) => {
+      const postBody = {
+        env,
         public: true,
         forceNew: true,
         name: document.getElementById('subdomain').value,
         deploymentType: 'NPM',
-        files: files,
+        files,
       };
       console.log(postBody);
-      var nowToken = document.getElementById('now-token').value;
+      const nowToken = document.getElementById('now-token').value;
       console.log(nowToken);
       return fetch('https://api.zeit.co/v3/now/deployments', {
         method: 'POST',
         headers: {
-          Authorization: ("Bearer " + nowToken),
+          Authorization: `Bearer ${nowToken}`,
           'content-type': 'application/json',
         },
         body: JSON.stringify(postBody),
         mode: 'cors',
       });
     })
-    .then(function (nowRes) { return nowRes.json(); }).then(function (success) {
+    .then(nowRes => nowRes.json()).then((success) => {
       console.log('success?');
       console.log(success);
     })
-    .catch(function (err) {
+    .catch((err) => {
       console.error(err);
     });
 };
 
-var setEnv = function setEnvFunc() {
-  var env = {
+const setEnv = function setEnvFunc() {
+  const env = {
     AIRTABLE_KEY: document.getElementById('airtable-key').value,
     AIRTABLE_BASE: document.getElementById('airtable-base').value,
     TWILIO_ACCOUNT_SID: document.getElementById('twilio-account-sid').value,
@@ -58,8 +56,8 @@ var setEnv = function setEnvFunc() {
     PASSPHRASE: document.getElementById('passphrase').value,
   };
 
-  var gooogleCredsFile = document.getElementById('google-creds').files[0];
-  var reader = new FileReader();
+  const gooogleCredsFile = document.getElementById('google-creds').files[0];
+  const reader = new FileReader();
   reader.onload = function doneReadingGoogleCreds() {
     env.GOOGLE_CREDS_STRING = reader.result;
     deploy(env);
@@ -68,5 +66,3 @@ var setEnv = function setEnvFunc() {
 };
 
 document.getElementById('deploy').addEventListener('click', setEnv);
-
-}());

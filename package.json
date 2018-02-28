@@ -47,6 +47,7 @@
     "marked": "^0.3.17",
     "nodemon": "^1.14.12",
     "rollup": "^0.55.5",
+    "rollup-plugin-buble": "^0.19.2",
     "rollup-plugin-commonjs": "^8.3.0",
     "rollup-plugin-node-resolve": "^3.0.2",
     "rollup-plugin-svelte": "^4.0.0",

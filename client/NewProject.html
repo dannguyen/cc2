@@ -71,32 +71,33 @@
         files.push(null);
         this.set({ files });
       },
-      async createProject() {
+      createProject() {
         const files = this.get('files');
         this.set({ promptIds: files.map(() => null) });
 
-        const project = await fetch('/api/projects', {
+        fetch('/api/projects', {
           method: 'POST',
           body: JSON.stringify({ name: this.get('name') }),
           headers: new Headers({ 'Content-Type': 'application/json' }),
-        }).then(res => res.json());
-        const projectId = project.id;
-        this.set({ projectId });
+        }).then(res => res.json()).then((project) => {
+          const projectId = project.id;
+          this.set({ projectId });
 
-        for (let index = 0; index < files.length; index += 1) {
-          const fd = new FormData();
-          fd.append('projectId', projectId);
-          fd.append('index', index);
-          fd.append('promptAudio', files[index]);
-          fetch('/api/prompts', {
-            method: 'POST',
-            body: fd,
-          }).then(res => res.json()).then((prompt) => {
-            const promptIds = this.get('promptIds');
-            promptIds[index] = prompt.id;
-            this.set({ promptIds });
-          });
-        }
+          for (let index = 0; index < files.length; index += 1) {
+            const fd = new FormData();
+            fd.append('projectId', projectId);
+            fd.append('index', index);
+            fd.append('promptAudio', files[index]);
+            fetch('/api/prompts', {
+              method: 'POST',
+              body: fd,
+            }).then(res => res.json()).then((prompt) => {
+              const promptIds = this.get('promptIds');
+              promptIds[index] = prompt.id;
+              this.set({ promptIds });
+            });
+          }
+        });
       },
     },
     data() {

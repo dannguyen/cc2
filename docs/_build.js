@@ -8,12 +8,17 @@ const path = require('path');
 
 const glob = require('glob');
 const marked = require('marked');
+const rollup = require('rollup');
+const buble = require('rollup-plugin-buble');
 
 const installFilename = path.join(__dirname, 'INSTALL.md');
 const wrapperFilename = path.join(__dirname, '_install.html');
 const outputFilename = path.join(__dirname, 'index.html');
 
 const deployListFilename = path.join(__dirname, 'deploy-files.json');
+
+const jsFilename = path.join(__dirname, '_index.js');
+const bubledFilename = path.join(__dirname, 'index.js');
 
 const buildInstructions = function buildInstructionsFunc() {
   const innerMarkdown = fs.readFileSync(installFilename, 'utf8');
@@ -30,6 +35,18 @@ const buildDeployList = function buildDeployListFunc() {
   console.log('Built deploy list.');
 };
 
+const bubleJs = async function bubleJsFunc() {
+  const bundle = await rollup.rollup({
+    input: jsFilename,
+    plugins: [buble()],
+  });
+  await bundle.write({
+    format: 'iife',
+    file: bubledFilename,
+  });
+  console.log('Bubled js.');
+};
+
 buildInstructions();
 buildDeployList();
-console.log('Built docs.');
+bubleJs();
