@@ -82,7 +82,7 @@ Here's what you need to do:
 
   Make sure "JSON" is elected under "Key type" and click the blue "Create" button. A file with a name like `hogsmeade-quarterly-62460ff5e214.json` should get downloaded to your computer. Now use the button below to load that file into this web page:
 
-  🗝 Your Twilio auth token: <input id="google-creds" type="file" accept=".json">
+  🗝 Your Google key file: <input id="google-creds" type="file" accept=".json">
 
   *Please know that the file is not actually getting uploaded anywhere, just loaded into your web browser so we can deploy it to your new Call Collect instance. I promise I'm not saving any of your sensitive information, and I encourage you to view the source of this page and [the code of the project more generally](https://github.com/alecglassford/cc2) to verify this!!!*
 

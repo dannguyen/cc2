@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name='viewport' content='width=device-width'>
     <title>Setting up your own instance of Call Collect</title>
+    <link rel='stylesheet' href='index.css'>
   </head>
   <body>
-    <h1 id="setting-up-your-own-instance-of-call-collect">Setting up your own instance of Call Collect</h1>
+    <div id="wrapper">
+      <h1 id="setting-up-your-own-instance-of-call-collect">Setting up your own instance of Call Collect</h1>
 <p>Updated 2018-02-27</p>
 <h2 id="overview">Overview</h2>
 <p>Currently there is no central/&quot;pro&quot; version of Call Collect that exists out on the Internet that you can pay to use. Instead, it&#39;s designed so you can run your own copy of the software for your newsroom/organization, easily and with little cost (probably around $2-10 a month). For example, if your publication is called <em>Hogsmeade Quarterly</em>, you could host it at <a href="https://hqcallcollect.now.sh">hqcallcollect.now.sh</a> behind a passphrase that you share with your team.</p>
@@ -66,7 +68,7 @@
 </li>
 <li><p>Okay, here&#39;s the most convoluted part! After this, it&#39;s all downhill. Ready? <a href="https://console.cloud.google.com/apis/credentials">Go to the credentials page.</a>, make sure your project is active (in the blue bar at the top), and click &quot;Create credentials&quot; then select &quot;Service account key.&quot; Use the &quot;Service account&quot; dropdown to create a new service account. Name it whatever you want (e.g. <code>call-collect-user</code>) and from the &quot;Role&quot; dropdown, scroll all the way to the bottom, hover over &quot;Storage&quot; and choose &quot;Storage Admin.&quot; What we&#39;re doing here is selecting some permissions to give to Call Collect, so it&#39;s able to do all the things it needs with your Google account but no more.</p>
 <p>Make sure &quot;JSON&quot; is elected under &quot;Key type&quot; and click the blue &quot;Create&quot; button. A file with a name like <code>hogsmeade-quarterly-62460ff5e214.json</code> should get downloaded to your computer. Now use the button below to load that file into this web page:</p>
-<p>🗝 Your Twilio auth token: <input id="google-creds" type="file" accept=".json"></p>
+<p>🗝 Your Google key file: <input id="google-creds" type="file" accept=".json"></p>
 <p><em>Please know that the file is not actually getting uploaded anywhere, just loaded into your web browser so we can deploy it to your new Call Collect instance. I promise I&#39;m not saving any of your sensitive information, and I encourage you to view the source of this page and <a href="https://github.com/alecglassford/cc2">the code of the project more generally</a> to verify this!!!</em></p>
 </li>
 <li><p>You&#39;re done! 🎉</p>
@@ -99,5 +101,7 @@
 <h2 id="deploy-">Deploy!</h2>
 <p>When you&#39;re ready to go, click this button and we&#39;ll try to make you wonderful little thing on the Internet: <button id="deploy">Make it.</button></p>
 
+    </div>
+    <script src="index.js"></script>
   </body>
 </html>
