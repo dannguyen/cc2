@@ -22,7 +22,8 @@
   },
   "main": "server.js",
   "scripts": {
-    "build": "rollup -c",
+    "build-docs": "node docs/build.js",
+    "build": "npm run build-docs && rollup -c",
     "dev": "nodemon -r dotenv/config server.js & rollup -c -w",
     "start": "node server.js",
     "test": "eslint --ext .html,.js server/ client/"
@@ -42,6 +43,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-html": "^4.0.2",
     "eslint-plugin-import": "^2.8.0",
+    "marked": "^0.3.17",
     "nodemon": "^1.14.12",
     "rollup": "^0.55.5",
     "rollup-plugin-commonjs": "^8.3.0",
