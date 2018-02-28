@@ -28,6 +28,11 @@
     "start": "node server.js",
     "test": "eslint --ext .html,.js server/ client/"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build-docs && git add docs"
+    }
+  },
   "dependencies": {
     "@google-cloud/speech": "^1.1.0",
     "@google-cloud/storage": "^1.5.2",
@@ -44,6 +49,7 @@
     "eslint-plugin-html": "^4.0.2",
     "eslint-plugin-import": "^2.8.0",
     "glob": "^7.1.2",
+    "husky": "^0.15.0-rc.8",
     "marked": "^0.3.17",
     "nodemon": "^1.14.12",
     "rollup": "^0.55.5",
