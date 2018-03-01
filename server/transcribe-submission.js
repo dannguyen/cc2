@@ -1,9 +1,31 @@
+import { randomBytes } from 'crypto';
 import { basename } from 'path';
 
 import speech from '@google-cloud/speech';
 import Storage from '@google-cloud/storage';
 
 import db from './db';
+
+const createBucket = async function createBucketFunc(storage) {
+  const name = `call-collect-${randomBytes(16).toString('hex')}`;
+  const bucket = storage.bucket(name);
+  await bucket.create({ storageClass: 'regional', location: 'us-west1' }); // TK customizable
+  console.log(`created bucket ${name}`);
+  return bucket;
+};
+
+const getBucket = async function getBucketFunc(storage) {
+  try {
+    const [buckets] = await storage.getBuckets();
+    console.log('here are the buckets', buckets.map(b => b.name));
+    return buckets.find(b => b.name.startsWith('call-collect')) || createBucket(storage);
+  } catch (err) {
+    console.error('Error getting or creating Google Cloud Storage bucket');
+    console.error(err);
+    console.error('😞');
+    return null;
+  }
+};
 
 let transcribe;
 
@@ -15,27 +37,7 @@ if (process.env.GOOGLE_CREDS_STRING === undefined) {
   const credentials = JSON.parse(process.env.GOOGLE_CREDS_STRING);
   const sc = new speech.v1.SpeechClient({ credentials });
   const storage = new Storage({ credentials });
-  const bucket = storage.bucket('call-collect'); // Can't actually use this - need to add random hash TK
-  let bucketExists = false; // Assume it doesn't until proven.
-  const createBucket = async function createBucketFunc() {
-    try {
-      await bucket.create({ storageClass: 'regional', location: 'us-west1' }); // TK customizable
-      console.log('created bucket');
-      bucketExists = true;
-    } catch (err) {
-      console.error('Error creating Google Cloud Storage bucket');
-      console.error(err);
-      console.error('😞');
-    }
-  };
-  bucket.exists().then((data) => {
-    if (data[0]) bucketExists = true;
-    else createBucket();
-  }).catch((err) => {
-    console.error('Error checking bucket existence');
-    console.error(err);
-    console.error('😞');
-  });
+  const bucketPromise = getBucket(storage);
 
   const saveTranscription = async function saveTranscriptionFunc(prelim, submissionId) {
     await db('submissions').update(submissionId, { transcript: 'Transcription in progress.' });
@@ -53,7 +55,7 @@ if (process.env.GOOGLE_CREDS_STRING === undefined) {
   transcribe = async function transcribeSubmission(submissionId) {
     console.log(submissionId);
     try {
-      if (!bucketExists) await createBucket();
+      const bucket = await bucketPromise; // should be resolved by now, probably
       const submission = await db('submissions').find(submissionId);
       await bucket.upload(submission.fields.audio);
       const gcsFilename = basename(submission.fields.audio);
@@ -68,7 +70,7 @@ if (process.env.GOOGLE_CREDS_STRING === undefined) {
           enableWordTimeOffsets: false, // TK add these
         },
         audio: {
-          uri: `gs://call-collect/${gcsFilename}`,
+          uri: `gs://${bucket.name}/${gcsFilename}`,
         },
       });
       saveTranscription(prelimResult, submissionId);
