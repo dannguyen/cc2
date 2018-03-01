@@ -30,13 +30,13 @@ Here's what you need to do:
 
 3. Go to [your account page](https://airtable.com/account). Toward the bottom, you'll see blue text that reads "Generate API Key." Click on this, and you should see a string of text that looks something like `keyMBHYWYitmZM92U`—this key will let Call Collect access your base. Copy and paste it into the box below:
 
-  🗝 Your Airtable API key: <input id="airtable-key" type="text">
+  <p class="user-input">🗝 Your Airtable API key: <input id="airtable-key" type="text"></p>
 
 4. Now go to [this page, which leads to some documentation](https://airtable.com/api). (You don't actually have to read anything if you don't want; we just need to get an ID that identifies your base.) You should see the base we created somewhere under "Select a base to view API documentation"; it should have a little purple megaphone icon. Click on this.
 
 5. This should take you to a page with a URL like `https://airtable.com/appKnWnJTYPq9Wrxd/api/docs#curl/introduction` (it doesn't matter if the format matches exactly). Copy the ID string in that URL (in my case it would be `appKnWnJTYPq9Wrxd`) and paste it into the box below:
 
-  🗝 Your Airtable base ID: <input id="airtable-base" type="text">
+  <p class="user-input">🗝 Your Airtable base ID: <input id="airtable-base" type="text"></p>
 
 6. You're done! 🎉
 
@@ -54,11 +54,11 @@ Here's what you need to do:
 
 2. Go to [your Twilio console](https://www.twilio.com/console/). In the upper left box, titled "Project Info," you'll see something called "Account SID." (It should look like `ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`.) This identifies your Twilio account for Call Collect. Copy that string of text and paste it into the box below:
 
-  🗝 Your Twilio account SID: <input id="twilio-account-sid" type="text">
+  <p class="user-input">🗝 Your Twilio account SID: <input id="twilio-account-sid" type="text"></p>
 
 3. In that same "Project Info" box, under the account SID, there should be something called "Auth Token." It will likely be hidden, so you'll need to click a little eye symbol (👁) to display it. (It should look like `04e7e977ead8da315a806288ca162cd5`.) This, together with the Account SID, lets Call Collect access your Twilio account. Copy it and paste it into the box below:
 
-  🗝 Your Twilio auth token: <input id="twilio-auth-token" type="text">
+  <p class="user-input">🗝 Your Twilio auth token: <input id="twilio-auth-token" type="text"></p>
 
 4. You're done! 🎉
 
@@ -82,7 +82,7 @@ Here's what you need to do:
 
   Make sure "JSON" is elected under "Key type" and click the blue "Create" button. A file with a name like `hogsmeade-quarterly-62460ff5e214.json` should get downloaded to your computer. Now use the button below to load that file into this web page:
 
-  🗝 Your Google key file: <input id="google-creds" type="file" accept=".json">
+  <p class="user-input">🗝 Your Google key file: <input id="google-creds" type="file" accept=".json"></p>
 
   *Please know that the file is not actually getting uploaded anywhere, just loaded into your web browser so we can deploy it to your new Call Collect instance. I promise I'm not saving any of your sensitive information, and I encourage you to view the source of this page and [the code of the project more generally](https://github.com/alecglassford/cc2) to verify this!!!*
 
@@ -98,7 +98,7 @@ This will be totally free. Here's what you need to do:
 
 2. [Go to the tokens page in your account settings.](https://zeit.co/account/tokens) Type "call-collect" (or any other memorable name) into the box that says "Create a new token by entering its name…" and hit enter. It should show up in the list above. Click "reveal" next to your new token and copy the "Secret" string of text that shows up (it should look like `oDGiEsH7irIvB5871buaVMzs`) and paste it into the box below:
 
-    🗝 Your Zeit Now token: <input id="now-token" type="text">
+    <p class="user-input">🗝 Your Zeit Now token: <input id="now-token" type="text"></p>
 
 3. You're done! 🎉
 
@@ -112,11 +112,11 @@ A couple of last things before we get this show on the road:
 
 * What would you like the URL for your Call Collect instance to be? (e.g. `hqcallcollect.now.sh`) We'll try to get it; if it's not available, we'll get something similar but with random letters or numbers appended to the first part.
 
-  🔖 Your preferred URL: <input id="subdomain" type="text">.now.sh
+  <p class="user-input">🔖 Your preferred URL: <input id="subdomain" type="text">.now.sh</p>
 
 * Pick a passphrase that you can share with your whole team (e.g. `the three broomsticks`). They'll need it to access the admin interface.
 
-  🔖 Your team's passphrase: <input id="passphrase" type="text">
+  <p class="user-input">🔖 Your team's passphrase: <input id="passphrase" type="text"></p>
 
 ## Deploy!
 

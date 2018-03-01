@@ -111,4 +111,10 @@ const setEnvAndDeploy = function setEnvAndDeployFunc() {
   reader.readAsText(googleCredsFile);
 };
 
+Array.from(document.querySelectorAll('.user-input input')).forEach((el) => {
+  el.addEventListener('change', () => {
+    if (el.value) el.parentNode.classList.add('filled');
+    else el.parentNode.classList.remove('filled');
+  });
+});
 document.getElementById('deploy').addEventListener('click', setEnvAndDeploy);

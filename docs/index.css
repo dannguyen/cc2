@@ -4,6 +4,22 @@
   margin: 0 auto;
 }
 
-h1, h2, h3 {
+h1, h2, h3, .user-input {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.user-input {
+  padding: 1em;
+  background-color: pink;
+  font-size: 1.2em;
+  transition: background-color 1s ease;
+}
+
+.user-input input {
+  font-size: 1.1em;
+}
+
+.user-input.filled {
+  background-color: palegreen;
+  transition: background-color 1s ease;
 }

@@ -27,12 +27,12 @@
 <li><p>You may be asked to choose a workspace to add the base to, in which case you can choose any (preferably an empty one). If you just created a new Airtable account, it will probably automatically put it in a workspace called &quot;My First Workspace.&quot; You can rename the workspace and base if you want, but you don&#39;t need to.</p>
 </li>
 <li><p>Go to <a href="https://airtable.com/account">your account page</a>. Toward the bottom, you&#39;ll see blue text that reads &quot;Generate API Key.&quot; Click on this, and you should see a string of text that looks something like <code>keyMBHYWYitmZM92U</code>—this key will let Call Collect access your base. Copy and paste it into the box below:</p>
-<p>🗝 Your Airtable API key: <input id="airtable-key" type="text"></p>
+<p class="user-input">🗝 Your Airtable API key: <input id="airtable-key" type="text"></p>
 </li>
 <li><p>Now go to <a href="https://airtable.com/api">this page, which leads to some documentation</a>. (You don&#39;t actually have to read anything if you don&#39;t want; we just need to get an ID that identifies your base.) You should see the base we created somewhere under &quot;Select a base to view API documentation&quot;; it should have a little purple megaphone icon. Click on this.</p>
 </li>
 <li><p>This should take you to a page with a URL like <code>https://airtable.com/appKnWnJTYPq9Wrxd/api/docs#curl/introduction</code> (it doesn&#39;t matter if the format matches exactly). Copy the ID string in that URL (in my case it would be <code>appKnWnJTYPq9Wrxd</code>) and paste it into the box below:</p>
-<p>🗝 Your Airtable base ID: <input id="airtable-base" type="text"></p>
+<p class="user-input">🗝 Your Airtable base ID: <input id="airtable-base" type="text"></p>
 </li>
 <li><p>You&#39;re done! 🎉</p>
 </li>
@@ -46,10 +46,10 @@
 <li><p><a href="https://www.twilio.com/try-twilio">Sign up for a Twilio account</a>, if you don&#39;t have one, or else <a href="https://www.twilio.com/login">log in</a>. While Twilio offers a free trial, it doesn&#39;t allow for all the features we need, so you&#39;ll need to <a href="https://www.twilio.com/console/billing">load in some money</a>. Twilio requires you load at least $20, but as noted above, this will probably last you months. Thankfully it lets you disable &quot;auto recharge,&quot; which means that if you use up all your money it won&#39;t automatically bill your credit card; it&#39;ll just shut down your phone numbers.</p>
 </li>
 <li><p>Go to <a href="https://www.twilio.com/console/">your Twilio console</a>. In the upper left box, titled &quot;Project Info,&quot; you&#39;ll see something called &quot;Account SID.&quot; (It should look like <code>ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</code>.) This identifies your Twilio account for Call Collect. Copy that string of text and paste it into the box below:</p>
-<p>🗝 Your Twilio account SID: <input id="twilio-account-sid" type="text"></p>
+<p class="user-input">🗝 Your Twilio account SID: <input id="twilio-account-sid" type="text"></p>
 </li>
 <li><p>In that same &quot;Project Info&quot; box, under the account SID, there should be something called &quot;Auth Token.&quot; It will likely be hidden, so you&#39;ll need to click a little eye symbol (👁) to display it. (It should look like <code>04e7e977ead8da315a806288ca162cd5</code>.) This, together with the Account SID, lets Call Collect access your Twilio account. Copy it and paste it into the box below:</p>
-<p>🗝 Your Twilio auth token: <input id="twilio-auth-token" type="text"></p>
+<p class="user-input">🗝 Your Twilio auth token: <input id="twilio-auth-token" type="text"></p>
 </li>
 <li><p>You&#39;re done! 🎉</p>
 </li>
@@ -68,7 +68,8 @@
 </li>
 <li><p>Okay, here&#39;s the most convoluted part! After this, it&#39;s all downhill. Ready? <a href="https://console.cloud.google.com/apis/credentials">Go to the credentials page.</a>, make sure your project is active (in the blue bar at the top), and click &quot;Create credentials&quot; then select &quot;Service account key.&quot; Use the &quot;Service account&quot; dropdown to create a new service account. Name it whatever you want (e.g. <code>call-collect-user</code>) and from the &quot;Role&quot; dropdown, scroll all the way to the bottom, hover over &quot;Storage&quot; and choose &quot;Storage Admin.&quot; What we&#39;re doing here is selecting some permissions to give to Call Collect, so it&#39;s able to do all the things it needs with your Google account but no more.</p>
 <p>Make sure &quot;JSON&quot; is elected under &quot;Key type&quot; and click the blue &quot;Create&quot; button. A file with a name like <code>hogsmeade-quarterly-62460ff5e214.json</code> should get downloaded to your computer. Now use the button below to load that file into this web page:</p>
-<p>🗝 Your Google key file: <input id="google-creds" type="file" accept=".json"></p>
+<p class="user-input">🗝 Your Google key file: <input id="google-creds" type="file" accept=".json"></p>
+
 <p><em>Please know that the file is not actually getting uploaded anywhere, just loaded into your web browser so we can deploy it to your new Call Collect instance. I promise I&#39;m not saving any of your sensitive information, and I encourage you to view the source of this page and <a href="https://github.com/alecglassford/cc2">the code of the project more generally</a> to verify this!!!</em></p>
 </li>
 <li><p>You&#39;re done! 🎉</p>
@@ -81,7 +82,7 @@
 <li><p><a href="https://zeit.co/login">Create a Zeit account, or login if you already have one.</a></p>
 </li>
 <li><p><a href="https://zeit.co/account/tokens">Go to the tokens page in your account settings.</a> Type &quot;call-collect&quot; (or any other memorable name) into the box that says &quot;Create a new token by entering its name…&quot; and hit enter. It should show up in the list above. Click &quot;reveal&quot; next to your new token and copy the &quot;Secret&quot; string of text that shows up (it should look like <code>oDGiEsH7irIvB5871buaVMzs</code>) and paste it into the box below:</p>
-<p> 🗝 Your Zeit Now token: <input id="now-token" type="text"></p>
+ <p class="user-input">🗝 Your Zeit Now token: <input id="now-token" type="text"></p>
 </li>
 <li><p>You&#39;re done! 🎉</p>
 </li>
@@ -92,10 +93,11 @@
 <p>A couple of last things before we get this show on the road:</p>
 <ul>
 <li><p>What would you like the URL for your Call Collect instance to be? (e.g. <code>hqcallcollect.now.sh</code>) We&#39;ll try to get it; if it&#39;s not available, we&#39;ll get something similar but with random letters or numbers appended to the first part.</p>
-<p>🔖 Your preferred URL: <input id="subdomain" type="text">.now.sh</p>
+<p class="user-input">🔖 Your preferred URL: <input id="subdomain" type="text">.now.sh</p>
 </li>
 <li><p>Pick a passphrase that you can share with your whole team (e.g. <code>the three broomsticks</code>). They&#39;ll need it to access the admin interface.</p>
-<p>🔖 Your team&#39;s passphrase: <input id="passphrase" type="text"></p>
+<p class="user-input">🔖 Your team&#39;s passphrase: <input id="passphrase" type="text"></p>
+
 </li>
 </ul>
 <h2 id="deploy-">Deploy!</h2>
